@@ -1,0 +1,9 @@
+.ss-gridfield .gf-toggle-deleted .ui-icon.btn-icon-ui-check-box {
+    background-image: url(./../images/ui-check-box.png);
+    background-position: center center;
+}
+
+.ss-gridfield .gf-toggle-deleted .ui-icon.btn-icon-ui-check-box-uncheck {
+    background-image: url(./../images/ui-check-box-uncheck.png);
+    background-position: center center;
+}

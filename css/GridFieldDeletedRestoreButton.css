@@ -1,0 +1,18 @@
+.cms table.ss-gridfield-table tbody td button.restore-draft-item {
+    width: 20px;
+    height: 20px;
+    
+    margin: 0;
+}
+
+.cms table.ss-gridfield-table tbody td button.restore-draft-item .ui-icon {
+    display: inline-block;
+    
+    position: static;
+    top: auto;
+    left: auto;
+    
+    margin: 0;
+    
+    vertical-align: middle;
+}
