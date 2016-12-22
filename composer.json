@@ -1,6 +1,7 @@
 {
     "name": "webbuilders-group/silverstripe-gridfield-deleted-items",
     "description": "Provides a series of components that allows you to view versioned objects that have been deleted from the draft site.",
+    "type": "silverstripe-module",
     "keywords": ["silverstripe", "gridfield", "versioned", "deleted"],
     "license": "BSD-3-Clause",
     "authors": [
