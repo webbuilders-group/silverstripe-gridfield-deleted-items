@@ -1,5 +1,7 @@
 SilverStripe GridField Deleted Items
 =================
+[![Build Status](https://travis-ci.org/webbuilders-group/silverstripe-siteconfig-error-pages.png?branch=master)](https://travis-ci.org/webbuilders-group/silverstripe-siteconfig-error-pages)
+
 Provides a series of components that allows you to view versioned objects that have been deleted from the draft site.
 
 ## Maintainer Contact
