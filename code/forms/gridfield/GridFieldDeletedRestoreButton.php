@@ -56,8 +56,12 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
                 if($record->getIsDeletedFromStage() && !$record->getExistsOnLive()) {
                     $record->writeToStage('Stage');
                     
-                    //Redirect to the edit screen
-                    return $controller->redirect($record->CMSEditLink());
+                    if($record->hasMethod('CMSEditLink')) {
+                        //Redirect to the edit screen
+                        return $controller->redirect($record->CMSEditLink());
+                    }else {
+                        return;
+                    }
                 }
                 
                 //Resource already exists so this shouldn't have been called
