@@ -53,7 +53,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
                 $record=Versioned::get_latest_version($gridField->getModelClass(), intval($arguments['RecordID']));
                 
                 //If the record does not exist on either draft or live write to the draft
-                if($record->getIsDeletedFromStage() && !$record->getExistsOnLive()) {
+                if($record->getIsDeletedFromStage()) {
                     $record->writeToStage('Stage');
                     
                     if($record->hasMethod('CMSEditLink')) {
@@ -65,11 +65,11 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
                 }
                 
                 //Resource already exists so this shouldn't have been called
-                return $controller->httpError(400, 'Item already exists on the draft or live site');
+                return $controller->httpError(400, _t('GridFieldDeletedRestoreButton.ITEM_ALREADY_EXISTS', 'Item already exists on the draft site'));
             }
             
             //Record ID is missing or not a number
-            return $controller->httpError(400, 'Invalid Record ID');
+            return $controller->httpError(400, _t('GridFieldDeletedRestoreButton.INVALID_ID', 'Invalid Record ID'));
         }
     }
     
@@ -109,7 +109,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
             
             return GridField_FormAction::create($gridField, 'restore-draft-item', false, 'restore-draft-item', array('RecordID'=>$record->ID))
                                                 ->addExtraClass('restore-draft-item')
-                                                ->setAttribute('title', 'Restore Draft')
+                                                ->setAttribute('title', _t('GridFieldDeletedRestoreButton.RESTORE_DRAFT', 'Restore Draft'))
                                                 ->setAttribute('data-icon', 'arrow-circle-135-left')
                                                 ->forTemplate();
         }

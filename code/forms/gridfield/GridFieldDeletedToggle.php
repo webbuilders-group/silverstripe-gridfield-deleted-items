@@ -22,12 +22,12 @@ class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTML
             return;
         }
         
-        $button=GridField_FormAction::create($gridField, 'grid-field-toggle-deleted', 'Include Deleted', 'gf-toggle-deleted', null)->addExtraClass('gf-toggle-deleted');
+        $button=GridField_FormAction::create($gridField, 'grid-field-toggle-deleted', _t('GridFieldDeletedToggle.INCLUDE_DELETED', 'Include Deleted'), 'gf-toggle-deleted', null)->addExtraClass('gf-toggle-deleted');
         
         
         if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y') {
             $button->setAttribute('data-icon', 'ui-check-box');
-            $button->setTitle('Including Deleted');
+            $button->setTitle(_t('GridFieldDeletedToggle.INCLUDING_DELETED', 'Including Deleted'));
         }else {
             $button->setAttribute('data-icon', 'ui-check-box-uncheck');
         }
