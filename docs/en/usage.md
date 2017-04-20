@@ -14,11 +14,13 @@ $gridField->getConfig()
                     ->addComponent(new GridFieldDeletedToggle('buttons-before-left'));
 ```
 
-Since you are using versioned you probably have a draft and a live state with special controls on the edit screen for working with those states. If so you probably also want to remove the delete action as users will end up in a situation where they've deleted the draft but not the live. As well this module does not supply an extension of the delete action that removes it when the record is deleted. To do this simply do the following this will remove the delete action.
+Since you are using versioned you probably have a draft and a live state with special controls on the edit screen for working with those states. If so you probably also want to remove the delete action as users will end up in a situation where they've deleted the draft but not the live. To do this simply do the following this will remove the delete action.
 
 ```php
 $gridField->getConfig()->removeComponentsByType('GridFieldDeleteAction');
 ```
+
+Optionally you could remove and replace the delete action with the ``GridFieldDeletedDeleteAction`` component that removes itself if the record is deleted, just be sure to pass true into the constructor when working with a many_many relationship.
 
 As well your model object for the GridField must declare the ``getIsDeletedFromStage`` and the ``getExistsOnLive`` methods, see below for an example of this methods.
 
