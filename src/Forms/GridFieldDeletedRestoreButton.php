@@ -1,21 +1,13 @@
 <?php
-
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
-
-
-
-use Object;
-
-
-
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
-
 
 class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridField_ActionProvider {
     /**
@@ -57,7 +49,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
         if($actionName=='restore-draft-item') {
-            if(!Object::has_extension($gridField->getModelClass(), Versioned::class)) {
+            if(!DataObject::has_extension($gridField->getModelClass(), Versioned::class)) {
                 user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_ERROR);
                 
                 return;
@@ -123,12 +115,11 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
      */
     public function getColumnContent($gridField, $record, $columnName) {
         if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && $record->getIsDeletedFromStage()) {
-            Requirements::css(GRIDFIELD_DELETED_DIR.'/css/GridFieldDeletedRestoreButton.css');
+            Requirements::css('webbuilders-group/silverstripe-gridfield-deleted-items: css/GridFieldDeletedRestoreButton.css');
             
             return GridField_FormAction::create($gridField, 'restore-draft-item', false, 'restore-draft-item', array('RecordID'=>$record->ID))
-                                                ->addExtraClass('restore-draft-item')
+                                                ->addExtraClass('btn--icon-md btn--no-text grid-field__icon-action font-icon-back-in-time restore-draft-item')
                                                 ->setAttribute('title', _t('GridFieldDeletedRestoreButton.RESTORE_DRAFT', 'Restore Draft'))
-                                                ->setAttribute('data-icon', 'arrow-circle-135-left')
                                                 ->forTemplate();
         }
     }

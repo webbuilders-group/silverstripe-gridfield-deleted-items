@@ -1,20 +1,13 @@
 <?php
-
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
-
-
-use Object;
-
-
-
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
-
 
 class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTMLProvider {
     protected $targetFragment;
@@ -33,7 +26,7 @@ class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTML
      * @return array
      */
     public function getHTMLFragments($gridField) {
-        if(!Object::has_extension($gridField->getModelClass(), Versioned::class)) {
+        if(!DataObject::has_extension($gridField->getModelClass(), Versioned::class)) {
             user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_WARNING);
             
             return;
@@ -41,16 +34,17 @@ class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTML
         
         $button=GridField_FormAction::create($gridField, 'grid-field-toggle-deleted', _t('GridFieldDeletedToggle.INCLUDE_DELETED', 'Include Deleted'), 'gf-toggle-deleted', null)->addExtraClass('gf-toggle-deleted');
         
+        $button->addExtraClass('btn btn-secondary');
         
         if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y') {
-            $button->setAttribute('data-icon', 'ui-check-box');
+            $button->addExtraClass('font-icon-tick');
             $button->setTitle(_t('GridFieldDeletedToggle.INCLUDING_DELETED', 'Including Deleted'));
         }else {
-            $button->setAttribute('data-icon', 'ui-check-box-uncheck');
+            $button->addExtraClass('font-icon-cancel');
         }
         
         
-        Requirements::css(GRIDFIELD_DELETED_DIR.'/css/GridFieldDeletedToggle.css');
+        Requirements::css('webbuilders-group/silverstripe-gridfield-deleted-items: css/GridFieldDeletedToggle.css');
         
         return array(
                     $this->targetFragment=>$button->forTemplate()

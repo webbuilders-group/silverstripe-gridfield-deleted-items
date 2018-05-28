@@ -1,14 +1,10 @@
 <?php
-
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
-
-use Object;
-
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
-
 
 class GridFieldDeletedColumns extends GridFieldDataColumns {
     /**
@@ -21,8 +17,8 @@ class GridFieldDeletedColumns extends GridFieldDataColumns {
     public function getColumnAttributes($gridField, $record, $columnName) {
         $attributes=parent::getColumnAttributes($gridField, $record, $columnName);
         
-        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && Object::has_extension($gridField->getModelClass(), Versioned::class) && $record->getIsDeletedFromStage()) {
-            Requirements::css(GRIDFIELD_DELETED_DIR.'/css/GridFieldDeletedColumns.css');
+        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && DataObject::has_extension($gridField->getModelClass(), Versioned::class) && $record->getIsDeletedFromStage()) {
+            Requirements::css('webbuilders-group/silverstripe-gridfield-deleted-items: css/GridFieldDeletedColumns.css');
             
             if(array_key_exists('class', $attributes)) {
                 $attributes['class'].=' deleted-record';

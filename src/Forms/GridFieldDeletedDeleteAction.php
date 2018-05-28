@@ -1,12 +1,9 @@
 <?php
-
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
-
-use Object;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-
 
 class GridFieldDeletedDeleteAction extends GridFieldDeleteAction {
     /**
@@ -17,7 +14,7 @@ class GridFieldDeletedDeleteAction extends GridFieldDeleteAction {
      * @return string The HTML for the column
      */
     public function getColumnContent($gridField, $record, $columnName) {
-        if(!Object::has_extension($gridField->getModelClass(), Versioned::class)) {
+        if(!DataObject::has_extension($gridField->getModelClass(), Versioned::class)) {
             user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_WARNING);
             
             return;
