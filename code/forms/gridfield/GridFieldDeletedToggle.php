@@ -1,4 +1,21 @@
 <?php
+
+namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
+
+
+
+use Object;
+
+
+
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\View\Requirements;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+
+
 class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTMLProvider {
     protected $targetFragment;
     
@@ -16,7 +33,7 @@ class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTML
      * @return array
      */
     public function getHTMLFragments($gridField) {
-        if(!Object::has_extension($gridField->getModelClass(), 'Versioned')) {
+        if(!Object::has_extension($gridField->getModelClass(), Versioned::class)) {
             user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_WARNING);
             
             return;

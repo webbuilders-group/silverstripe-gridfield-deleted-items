@@ -1,4 +1,22 @@
 <?php
+
+namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
+
+
+
+
+use Object;
+
+
+
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\Requirements;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+
+
 class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridField_ActionProvider {
     /**
      * Additional metadata about the column which can be used by other components
@@ -39,7 +57,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
         if($actionName=='restore-draft-item') {
-            if(!Object::has_extension($gridField->getModelClass(), 'Versioned')) {
+            if(!Object::has_extension($gridField->getModelClass(), Versioned::class)) {
                 user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_ERROR);
                 
                 return;

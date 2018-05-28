@@ -1,7 +1,7 @@
 {
     "name": "webbuilders-group/silverstripe-gridfield-deleted-items",
     "description": "Provides a series of components that allows you to view versioned objects that have been deleted from the draft site.",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "keywords": ["silverstripe", "gridfield", "versioned", "deleted"],
     "license": "BSD-3-Clause",
     "authors": [
@@ -13,13 +13,17 @@
     ],
     "require":
     {
-        "silverstripe/framework": "~3.3",
-        "composer/installers": "*"
+        "silverstripe/framework": "~4.1"
     },
     "support": {
         "issues": "https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/issues"
     },
-    "extra": {
-        "installer-name": "gridfield-deleted-items"
-    }
+	"extra": {
+        "expose": [
+            "css"
+        ],
+		"branch-alias": {
+			"dev-master": "2.0.x-dev"
+		}
+	}
 }

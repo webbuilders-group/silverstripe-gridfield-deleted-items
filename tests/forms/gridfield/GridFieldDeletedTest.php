@@ -1,8 +1,40 @@
 <?php
+
+namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
+
+
+
+
+
+
+
+
+
+
+
+
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedTest_TestObject;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Versioned\Versioned;
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedColumns;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\TestOnly;
+
+
 class GridFieldDeletedTest extends FunctionalTest {
     protected static $fixture_file='GridFieldDeletedTest.yml';
 
-	protected $extraDataObjects=array('GridFieldDeletedTest_TestObject');
+	protected $extraDataObjects=array(GridFieldDeletedTest_TestObject::class);
     
     protected $list;
     protected $gridField;
@@ -13,9 +45,9 @@ class GridFieldDeletedTest extends FunctionalTest {
         
         $this->list=GridFieldDeletedTest_TestObject::get();
         $config=GridFieldConfig_RecordEditor::create(10)
-                                                        ->removeComponentsByType('GridFieldDataColumns')
-                                                        ->removeComponentsByType('GridFieldEditButton')
-                                                        ->addComponent(new GridFieldDeletedManipulator(), 'GridFieldToolbarHeader')
+                                                        ->removeComponentsByType(GridFieldDataColumns::class)
+                                                        ->removeComponentsByType(GridFieldEditButton::class)
+                                                        ->addComponent(new GridFieldDeletedManipulator(), GridFieldToolbarHeader::class)
                                                         ->addComponent(new GridFieldDeletedColumns())
                                                         ->addComponent(new GridFieldDeletedEditButton())
                                                         ->addComponent(new GridFieldDeletedRestoreButton())
@@ -46,7 +78,7 @@ class GridFieldDeletedTest extends FunctionalTest {
         //Toggle the show deleted on
         $stateID='testGridStateActionField';
         Session::set($stateID, array('grid'=>'', 'actionName'=>'gf-toggle-deleted', 'args'=>array('ListDisplayMode'=>array('ShowDeletedItems'=>'Y'))));
-        $request=new SS_HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
+        $request=new HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         
         
@@ -57,7 +89,7 @@ class GridFieldDeletedTest extends FunctionalTest {
         //Toggle the show deleted back off
         $stateID='testGridStateActionField';
         Session::set($stateID, array('grid'=>'', 'actionName'=>'gf-toggle-deleted', 'args'=>array('ListDisplayMode'=>array('ShowDeletedItems'=>'N'))));
-        $request=new SS_HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
+        $request=new HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         
         
@@ -70,25 +102,25 @@ class GridFieldDeletedTest extends FunctionalTest {
      */
     public function testRestoreDeleted() {
         //Load the item to delete and capture it's id then delete it
-        $deletedItem=$this->objFromFixture('GridFieldDeletedTest_TestObject', 'testobj2');
+        $deletedItem=$this->objFromFixture(GridFieldDeletedTest_TestObject::class, 'testobj2');
         $deletedItemID=$deletedItem->ID;
         $deletedItem->delete();
         
         
         //Make sure the item was deleted
-        $this->assertNull(Versioned::get_one_by_stage('GridFieldDeletedTest_TestObject', 'Stage', '"ID"='.$deletedItemID), 'Item was not deleted prior to restoring');
+        $this->assertNull(Versioned::get_one_by_stage(GridFieldDeletedTest_TestObject::class, 'Stage', '"ID"='.$deletedItemID), 'Item was not deleted prior to restoring');
         
         
         //Attempt to restore the item
         $stateID='testGridStateActionField';
         Session::set($stateID, array('grid'=>'', 'actionName'=>'restore-draft-item', 'args'=>array('RecordID'=>$deletedItemID)));
-        $request=new SS_HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
+        $request=new HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         
         
         //Check to see if the item exists again
-        $item=Versioned::get_one_by_stage('GridFieldDeletedTest_TestObject', 'Stage', '"Title"=\'Test Object 2\'');
-        $this->assertInstanceOf('GridFieldDeletedTest_TestObject', $item, 'Could not find the item after restoring');
+        $item=Versioned::get_one_by_stage(GridFieldDeletedTest_TestObject::class, 'Stage', '"Title"=\'Test Object 2\'');
+        $this->assertInstanceOf(GridFieldDeletedTest_TestObject::class, $item, 'Could not find the item after restoring');
         $this->assertTrue($item->exists(), 'Could not find the item after restoring');
     }
     
@@ -97,7 +129,7 @@ class GridFieldDeletedTest extends FunctionalTest {
      */
     public function testDeletedNoEdit() {
         //Load the item to delete and capture it's id then delete it
-        $deletedItem=$this->objFromFixture('GridFieldDeletedTest_TestObject', 'testobj2');
+        $deletedItem=$this->objFromFixture(GridFieldDeletedTest_TestObject::class, 'testobj2');
         $deletedItem->delete();
         
         
@@ -106,7 +138,7 @@ class GridFieldDeletedTest extends FunctionalTest {
         
         
         //Get the attributes for the deleted item's title column
-        $attributes=$this->gridField->getConfig()->getComponentByType('GridFieldDeletedColumns')->getColumnAttributes($this->gridField, $deletedItem, 'Title');
+        $attributes=$this->gridField->getConfig()->getComponentByType(GridFieldDeletedColumns::class)->getColumnAttributes($this->gridField, $deletedItem, 'Title');
         
         
         //Verify we have an array and the class attribute exists
@@ -120,7 +152,7 @@ class GridFieldDeletedTest extends FunctionalTest {
         
         
         //Get the attributes for a non-deleted item
-        $attributes=$this->gridField->getConfig()->getComponentByType('GridFieldDeletedColumns')->getColumnAttributes($this->gridField, $this->objFromFixture('GridFieldDeletedTest_TestObject', 'testobj1'), 'Title');
+        $attributes=$this->gridField->getConfig()->getComponentByType(GridFieldDeletedColumns::class)->getColumnAttributes($this->gridField, $this->objFromFixture(GridFieldDeletedTest_TestObject::class, 'testobj1'), 'Title');
         
         
         //Verify we have an array and the class attribute exists
@@ -140,7 +172,7 @@ class GridFieldDeletedTest_TestObject extends DataObject implements TestOnly {
                         );
     
     private static $extensions=array(
-                                    'Versioned'
+                                    Versioned::class
                                 );
     
     
