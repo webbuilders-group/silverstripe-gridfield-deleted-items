@@ -21,11 +21,18 @@ matrix:
       env: DB=SQLITE3 CORE_RELEASE=4.1
 
 before_script:
+  # Init PHP
   - composer self-update || true
-  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
-  - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
-  - cd ~/builds/ss
-  - composer install
+  - phpenv rehash
+  - phpenv config-rm xdebug.ini
+
+  # Install composer dependencies
+  - composer validate
+  - composer require --no-update silverstripe/recipe-core:^1.0
+  - composer require --no-update phpunit/phpunit:^5.7
+  - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist --no-update; fi
+  - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.1.x-dev --prefer-dist --no-update; fi
+  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 script:
   - vendor/bin/phpunit vendor/webbuilders-group/silverstripe-gridfield-deleted-items/tests
