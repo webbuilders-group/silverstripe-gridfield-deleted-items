@@ -28,4 +28,4 @@ before_script:
   - composer install
 
 script:
-  - vendor/bin/phpunit gridfield-deleted-items/tests
+  - vendor/bin/phpunit vendor/webbuilders-group/silverstripe-gridfield-deleted-items/tests
