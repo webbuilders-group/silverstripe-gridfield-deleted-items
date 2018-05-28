@@ -1,40 +1,32 @@
 <?php
-
-namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
-
+namespace WebbuildersGroup\GridFieldDeletedItems\Tests;
 
 
-
-
-
-
-
-
-
-
-
-use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedTest_TestObject;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedColumns;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Dev\TestOnly;
-
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedEditButton;
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedDeleteAction;
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedManipulator;
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedRestoreButton;
+use WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedToggle;
 
 class GridFieldDeletedTest extends FunctionalTest {
     protected static $fixture_file='GridFieldDeletedTest.yml';
-
-	protected $extraDataObjects=array(GridFieldDeletedTest_TestObject::class);
+	protected static $extra_dataobjects=array(GridFieldDeletedTest\TestObject::class);
     
     protected $list;
     protected $gridField;
@@ -43,7 +35,7 @@ class GridFieldDeletedTest extends FunctionalTest {
     public function setUp() {
         parent::setUp();
         
-        $this->list=GridFieldDeletedTest_TestObject::get();
+        $this->list=GridFieldDeletedTest\TestObject::get();
         $config=GridFieldConfig_RecordEditor::create(10)
                                                         ->removeComponentsByType(GridFieldDataColumns::class)
                                                         ->removeComponentsByType(GridFieldEditButton::class)
@@ -54,7 +46,7 @@ class GridFieldDeletedTest extends FunctionalTest {
                                                         ->addComponent(new GridFieldDeletedToggle('buttons-before-left'));
         
         $this->gridField=new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form=new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form=new Form(new GridFieldDeletedTest\DummyController(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
     }
     
     /**
@@ -62,7 +54,7 @@ class GridFieldDeletedTest extends FunctionalTest {
      */
     public function testToggleShowDeleted() {
         $deletedIDs=array();
-        $list=GridFieldDeletedTest_TestObject::get();
+        $list=GridFieldDeletedTest\TestObject::get();
         foreach($list as $item) {
             if($item->ID%2==0) {
                 $deletedIDs[]=$item->ID;
@@ -77,8 +69,11 @@ class GridFieldDeletedTest extends FunctionalTest {
         
         //Toggle the show deleted on
         $stateID='testGridStateActionField';
-        Session::set($stateID, array('grid'=>'', 'actionName'=>'gf-toggle-deleted', 'args'=>array('ListDisplayMode'=>array('ShowDeletedItems'=>'Y'))));
         $request=new HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
+        $session=Injector::inst()->create(Session::class, []);
+        $request->setSession($session);
+        $session->init($request);
+        $request->getSession()->set($stateID, array('grid'=>'', 'actionName'=>'gf-toggle-deleted', 'args'=>array('ListDisplayMode'=>array('ShowDeletedItems'=>'Y'))));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         
         
@@ -88,8 +83,11 @@ class GridFieldDeletedTest extends FunctionalTest {
         
         //Toggle the show deleted back off
         $stateID='testGridStateActionField';
-        Session::set($stateID, array('grid'=>'', 'actionName'=>'gf-toggle-deleted', 'args'=>array('ListDisplayMode'=>array('ShowDeletedItems'=>'N'))));
         $request=new HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
+        $session=Injector::inst()->create(Session::class, []);
+        $request->setSession($session);
+        $session->init($request);
+        $request->getSession()->set($stateID, array('grid'=>'', 'actionName'=>'gf-toggle-deleted', 'args'=>array('ListDisplayMode'=>array('ShowDeletedItems'=>'N'))));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         
         
@@ -102,25 +100,28 @@ class GridFieldDeletedTest extends FunctionalTest {
      */
     public function testRestoreDeleted() {
         //Load the item to delete and capture it's id then delete it
-        $deletedItem=$this->objFromFixture(GridFieldDeletedTest_TestObject::class, 'testobj2');
+        $deletedItem=$this->objFromFixture(GridFieldDeletedTest\TestObject::class, 'testobj2');
         $deletedItemID=$deletedItem->ID;
         $deletedItem->delete();
         
         
         //Make sure the item was deleted
-        $this->assertNull(Versioned::get_one_by_stage(GridFieldDeletedTest_TestObject::class, 'Stage', '"ID"='.$deletedItemID), 'Item was not deleted prior to restoring');
+        $this->assertNull(Versioned::get_one_by_stage(GridFieldDeletedTest\TestObject::class, 'Stage', '"ID"='.$deletedItemID), 'Item was not deleted prior to restoring');
         
         
         //Attempt to restore the item
         $stateID='testGridStateActionField';
-        Session::set($stateID, array('grid'=>'', 'actionName'=>'restore-draft-item', 'args'=>array('RecordID'=>$deletedItemID)));
         $request=new HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true, $this->form->getSecurityToken()->getName()=>$this->form->getSecurityToken()->getValue()));
+        $session=Injector::inst()->create(Session::class, []);
+        $request->setSession($session);
+        $session->init($request);
+        $request->getSession()->set($stateID, array('grid'=>'', 'actionName'=>'restore-draft-item', 'args'=>array('RecordID'=>$deletedItemID)));
         $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
         
         
         //Check to see if the item exists again
-        $item=Versioned::get_one_by_stage(GridFieldDeletedTest_TestObject::class, 'Stage', '"Title"=\'Test Object 2\'');
-        $this->assertInstanceOf(GridFieldDeletedTest_TestObject::class, $item, 'Could not find the item after restoring');
+        $item=Versioned::get_one_by_stage(GridFieldDeletedTest\TestObject::class, 'Stage', '"Title"=\'Test Object 2\'');
+        $this->assertInstanceOf(GridFieldDeletedTest\TestObject::class, $item, 'Could not find the item after restoring');
         $this->assertTrue($item->exists(), 'Could not find the item after restoring');
     }
     
@@ -129,7 +130,7 @@ class GridFieldDeletedTest extends FunctionalTest {
      */
     public function testDeletedNoEdit() {
         //Load the item to delete and capture it's id then delete it
-        $deletedItem=$this->objFromFixture(GridFieldDeletedTest_TestObject::class, 'testobj2');
+        $deletedItem=$this->objFromFixture(GridFieldDeletedTest\TestObject::class, 'testobj2');
         $deletedItem->delete();
         
         
@@ -152,7 +153,7 @@ class GridFieldDeletedTest extends FunctionalTest {
         
         
         //Get the attributes for a non-deleted item
-        $attributes=$this->gridField->getConfig()->getComponentByType(GridFieldDeletedColumns::class)->getColumnAttributes($this->gridField, $this->objFromFixture(GridFieldDeletedTest_TestObject::class, 'testobj1'), 'Title');
+        $attributes=$this->gridField->getConfig()->getComponentByType(GridFieldDeletedColumns::class)->getColumnAttributes($this->gridField, $this->objFromFixture(GridFieldDeletedTest\TestObject::class, 'testobj1'), 'Title');
         
         
         //Verify we have an array and the class attribute exists
@@ -163,43 +164,6 @@ class GridFieldDeletedTest extends FunctionalTest {
         //Verify that the deleted-record class is not applied
         $classes=explode(' ', $attributes['class']);
         $this->assertNotContains('deleted-record', $classes, 'Item was not deleted but the deleted-record class was found');
-    }
-}
-
-class GridFieldDeletedTest_TestObject extends DataObject implements TestOnly {
-    private static $db=array(
-                            'Title'=>'Varchar(255)'
-                        );
-    
-    private static $extensions=array(
-                                    Versioned::class
-                                );
-    
-    
-    /**
-     * Compares current draft with live version, and returns TRUE if no draft version of this page exists, but the page is still published (after triggering "Delete from draft site" in the CMS).
-     * @return bool
-     */
-    public function getIsDeletedFromStage() {
-        if(!$this->ID) {
-            return true;
-        }
-        
-        if(!$this->exists()) {
-            return false;
-        }
-        
-        $stageVersion=Versioned::get_versionnumber_by_stage($this->class, 'Stage', $this->ID);
-        
-        // Return true for both completely deleted pages and for pages just deleted from stage.
-        return !($stageVersion);
-    }
-    
-    /**
-     * Return true if this page exists on the live site
-     */
-    public function getExistsOnLive() {
-        return (bool)Versioned::get_versionnumber_by_stage($this->class, 'Live', $this->ID);
     }
 }
 ?>

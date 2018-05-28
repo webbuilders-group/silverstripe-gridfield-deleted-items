@@ -2,12 +2,12 @@
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
-use SilverStripe\Forms\GridField\GridField_FormAction;
-use SilverStripe\Forms\GridField\GridField_ColumnProvider;
-use SilverStripe\Forms\GridField\GridField_ActionProvider;
 
 class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridField_ActionProvider {
     /**
@@ -75,11 +75,11 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
                 }
                 
                 //Resource already exists so this shouldn't have been called
-                return $controller->httpError(400, _t('GridFieldDeletedRestoreButton.ITEM_ALREADY_EXISTS', 'Item already exists on the draft site'));
+                return $controller->httpError(400, _t('WebbuildersGroup\\GridFieldDeletedItems\\Forms\\GridFieldDeletedRestoreButton.ITEM_ALREADY_EXISTS', 'Item already exists on the draft site'));
             }
             
             //Record ID is missing or not a number
-            return $controller->httpError(400, _t('GridFieldDeletedRestoreButton.INVALID_ID', 'Invalid Record ID'));
+            return $controller->httpError(400, _t('WebbuildersGroup\\GridFieldDeletedItems\\Forms\\GridFieldDeletedRestoreButton.INVALID_ID', 'Invalid Record ID'));
         }
     }
     
@@ -119,7 +119,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
             
             return GridField_FormAction::create($gridField, 'restore-draft-item', false, 'restore-draft-item', array('RecordID'=>$record->ID))
                                                 ->addExtraClass('btn--icon-md btn--no-text grid-field__icon-action font-icon-back-in-time restore-draft-item')
-                                                ->setAttribute('title', _t('GridFieldDeletedRestoreButton.RESTORE_DRAFT', 'Restore Draft'))
+                                                ->setAttribute('title', _t('WebbuildersGroup\\GridFieldDeletedItems\\Forms\\GridFieldDeletedRestoreButton.RESTORE_DRAFT', 'Restore Draft'))
                                                 ->forTemplate();
         }
     }

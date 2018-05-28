@@ -1,8 +1,8 @@
 en:
-    GridFieldDeletedRestoreButton:
+    WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedRestoreButton:
         ITEM_ALREADY_EXISTS: "Item already exists on the draft site"
         INVALID_ID: "Invalid Record ID"
         RESTORE_DRAFT: "Restore Draft"
-    GridFieldDeletedToggle:
+    WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedToggle:
         INCLUDE_DELETED: "Include Deleted"
         INCLUDING_DELETED: "Including Deleted"

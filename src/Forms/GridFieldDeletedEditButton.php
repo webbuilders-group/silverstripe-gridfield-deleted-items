@@ -1,9 +1,9 @@
 <?php
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\Forms\GridField\GridFieldEditButton;
 
 class GridFieldDeletedEditButton extends GridFieldEditButton {
     /**

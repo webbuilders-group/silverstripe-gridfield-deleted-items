@@ -2,10 +2,10 @@
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridField_DataManipulator;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\Forms\GridField\GridField_DataManipulator;
 
 class GridFieldDeletedManipulator implements GridField_DataManipulator {
     /**

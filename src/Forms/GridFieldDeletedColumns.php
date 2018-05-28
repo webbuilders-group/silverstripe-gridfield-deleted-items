@@ -1,10 +1,10 @@
 <?php
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
 class GridFieldDeletedColumns extends GridFieldDataColumns {
     /**

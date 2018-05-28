@@ -1,13 +1,13 @@
 <?php
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Versioned\Versioned;
-use SilverStripe\Forms\GridField\GridField_FormAction;
-use SilverStripe\View\Requirements;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\Requirements;
 
 class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTMLProvider {
     protected $targetFragment;
@@ -32,13 +32,13 @@ class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTML
             return;
         }
         
-        $button=GridField_FormAction::create($gridField, 'grid-field-toggle-deleted', _t('GridFieldDeletedToggle.INCLUDE_DELETED', 'Include Deleted'), 'gf-toggle-deleted', null)->addExtraClass('gf-toggle-deleted');
+        $button=GridField_FormAction::create($gridField, 'grid-field-toggle-deleted', _t('WebbuildersGroup\\GridFieldDeletedItems\\Forms\\GridFieldDeletedToggle.INCLUDE_DELETED', 'Include Deleted'), 'gf-toggle-deleted', null)->addExtraClass('gf-toggle-deleted');
         
         $button->addExtraClass('btn btn-secondary');
         
         if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y') {
             $button->addExtraClass('font-icon-tick');
-            $button->setTitle(_t('GridFieldDeletedToggle.INCLUDING_DELETED', 'Including Deleted'));
+            $button->setTitle(_t('WebbuildersGroup\\GridFieldDeletedItems\\Forms\\GridFieldDeletedToggle.INCLUDING_DELETED', 'Including Deleted'));
         }else {
             $button->addExtraClass('font-icon-cancel');
         }
