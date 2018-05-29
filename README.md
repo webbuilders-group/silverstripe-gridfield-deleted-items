@@ -9,7 +9,7 @@ Provides a series of components that allows you to view versioned objects that h
 
 
 ## Requirements
-* SilverStripe Framework 3.3+
+* SilverStripe Framework 4.1+
 
 
 ## Installation
