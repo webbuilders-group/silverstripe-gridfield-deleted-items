@@ -20,7 +20,8 @@ class GridFieldDeletedEditButton extends GridFieldEditButton {
             return;
         }
         
-        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && $record->getIsDeletedFromStage()) {
+        $isDeletedFromDraft=(!$record->hasMethod('isOnDraft') ? $record->getIsDeletedFromStage():!$record->isOnDraft());
+        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && $isDeletedFromDraft) {
             return;
         }
         

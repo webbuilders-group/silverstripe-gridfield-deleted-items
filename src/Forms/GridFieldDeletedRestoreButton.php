@@ -63,7 +63,8 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
                 $record=Versioned::get_latest_version($gridField->getModelClass(), intval($arguments['RecordID']));
                 
                 //If the record does not exist on either draft or live write to the draft
-                if($record->getIsDeletedFromStage()) {
+                $isDeletedFromDraft=(!$record->hasMethod('isOnDraft') ? $record->getIsDeletedFromStage():!$record->isOnDraft());
+                if($isDeletedFromDraft) {
                     $record->writeToStage('Stage');
                     
                     if($record->hasMethod('CMSEditLink')) {
@@ -114,7 +115,8 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
      * @return string HTML for the column. Return NULL to skip.
      */
     public function getColumnContent($gridField, $record, $columnName) {
-        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && $record->getIsDeletedFromStage()) {
+        $isDeletedFromDraft=(!$record->hasMethod('isOnDraft') ? $record->getIsDeletedFromStage():!$record->isOnDraft());
+        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && $isDeletedFromDraft) {
             Requirements::css('webbuilders-group/silverstripe-gridfield-deleted-items: css/GridFieldDeletedRestoreButton.css');
             
             return GridField_FormAction::create($gridField, 'restore-draft-item', false, 'restore-draft-item', array('RecordID'=>$record->ID))
