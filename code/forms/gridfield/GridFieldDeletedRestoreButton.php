@@ -48,7 +48,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
             $controller=$gridField->getForm()->getController();
             
             if(array_key_exists('RecordID', $arguments) && is_numeric($arguments['RecordID'])) {
-                Versioned::reset();
+                Versioned::set_reading_mode('Stage.Stage');
                 
                 $record=Versioned::get_latest_version($gridField->getModelClass(), intval($arguments['RecordID']));
                 
