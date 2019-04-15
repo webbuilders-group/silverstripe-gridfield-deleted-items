@@ -10,7 +10,7 @@ class GridFieldDeletedColumns extends GridFieldDataColumns {
     public function getColumnAttributes($gridField, $record, $columnName) {
         $attributes=parent::getColumnAttributes($gridField, $record, $columnName);
         
-        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && Object::has_extension($gridField->getModelClass(), 'Versioned') && $record->getIsDeletedFromStage()) {
+        if($gridField->State->ListDisplayMode->ShowDeletedItems=='Y' && SS_Object::has_extension($gridField->getModelClass(), 'Versioned') && $record->getIsDeletedFromStage()) {
             Requirements::css(GRIDFIELD_DELETED_DIR.'/css/GridFieldDeletedColumns.css');
             
             if(array_key_exists('class', $attributes)) {

@@ -8,7 +8,7 @@ class GridFieldDeletedEditButton extends GridFieldEditButton {
      * @return string The HTML for the column
      */
     public function getColumnContent($gridField, $record, $columnName) {
-        if(!Object::has_extension($gridField->getModelClass(), 'Versioned')) {
+        if(!SS_Object::has_extension($gridField->getModelClass(), 'Versioned')) {
             user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_WARNING);
             
             return;

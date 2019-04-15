@@ -16,7 +16,7 @@ class GridFieldDeletedToggle implements GridField_ActionProvider, GridField_HTML
      * @return array
      */
     public function getHTMLFragments($gridField) {
-        if(!Object::has_extension($gridField->getModelClass(), 'Versioned')) {
+        if(!SS_Object::has_extension($gridField->getModelClass(), 'Versioned')) {
             user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_WARNING);
             
             return;

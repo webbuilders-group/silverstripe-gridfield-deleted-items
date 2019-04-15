@@ -39,7 +39,7 @@ class GridFieldDeletedRestoreButton implements GridField_ColumnProvider, GridFie
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
         if($actionName=='restore-draft-item') {
-            if(!Object::has_extension($gridField->getModelClass(), 'Versioned')) {
+            if(!SS_Object::has_extension($gridField->getModelClass(), 'Versioned')) {
                 user_error($gridField->getModelClass().' does not have the Versioned extension', E_USER_ERROR);
                 
                 return;
