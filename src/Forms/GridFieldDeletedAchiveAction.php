@@ -3,9 +3,10 @@ namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\GridFieldArchiveAction;
 use SilverStripe\Versioned\Versioned;
 
-class GridFieldDeletedDeleteAction extends GridFieldDeleteAction
+class GridFieldDeletedAchiveAction extends GridFieldArchiveAction
 {
     /**
      * Gets the content for the column, this basically says if it's deleted from the stage you can't delete it
@@ -40,7 +41,6 @@ class GridFieldDeletedDeleteAction extends GridFieldDeleteAction
     {
         if (!DataObject::has_extension($gridField->getModelClass(), Versioned::class)) {
             user_error($gridField->getModelClass() . ' does not have the Versioned extension', E_USER_WARNING);
-
             return;
         }
 

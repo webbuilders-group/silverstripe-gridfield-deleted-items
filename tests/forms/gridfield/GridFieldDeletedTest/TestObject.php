@@ -6,15 +6,15 @@ use WebbuildersGroup\GridFieldDeletedItems\Tests\GridFieldDeletedTest_TestObject
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\TestOnly;
 
-class TestObject extends DataObject implements TestOnly {
-    private static $db=array(
-                            'Title'=>'Varchar(255)'
-                        );
+class TestObject extends DataObject implements TestOnly
+{
+    private static $db = [
+                            'Title' => 'Varchar(255)',
+                        ];
     
-    private static $extensions=array(
+    private static $extensions = [
                                     Versioned::class
-                                );
+                                ];
     
-    private static $table_name='GridFieldDeletedTest_TestObject';
+    private static $table_name = 'GridFieldDeletedTest_TestObject';
 }
-?>
