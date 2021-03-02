@@ -2,6 +2,9 @@ language: php
 php:
  - 7.2
 
+os: linux
+dist: xenial
+
 sudo: false
 
 notifications:
@@ -15,10 +18,16 @@ matrix:
   include:
     - php: 7.2
       env: DB=PGSQL CORE_RELEASE=4.7
+      services:
+        - postgresql
     - php: 7.2
       env: DB=MYSQL CORE_RELEASE=4.7
+      services:
+        - mysql
     - php: 7.2
-      env: DB=SQLITE3 CORE_RELEASE=4.7
+      env: DB=MYSQL CORE_RELEASE=4.5
+      services:
+        - mysql
 
 before_script:
   # Init PHP
@@ -28,10 +37,9 @@ before_script:
 
   # Install composer dependencies
   - composer validate
-  - composer require --no-update silverstripe/recipe-core:"^$CORE_RELEASE"
+  - composer require --no-update silverstripe/recipe-core:"^$CORE_RELEASE" --prefer-dist
   - composer require --no-update phpunit/phpunit:^5.7
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:~2.0 --prefer-dist --no-update; fi
-  - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:~2.0 --prefer-dist --no-update; fi
   - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 script:
