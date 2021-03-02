@@ -19,11 +19,10 @@ $gridField->getConfig()
                     ->addComponent(new GridFieldDeletedRestoreButton(), 'SilverStripe\\Forms\\GridField\\GridFieldDeleteAction')
                     ->addComponent(new GridFieldDeletedToggle('buttons-before-left'));
 ```
-on the edit screen for working with those states. If so you probably als
-Since you are using versioned you probably have a draft and a live state with special controls o want to remove the delete action as users will end up in a situation where they've deleted the draft but not the live. To do this simply do the following this will remove the delete action.
+Since you are using versioned you probably have a draft and a live state with special controls on the edit screen for working with those states. If so you probably also want to remove the delete action as users will end up in a situation where they've deleted the draft but not the live. To do this simply do the following this will remove the delete action.
 
 ```php
 $gridField->getConfig()->removeComponentsByType('SilverStripe\\Forms\\GridField\\GridFieldDeleteAction');
 ```
 
-Optionally you could remove and replace the delete action with the ``WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedDeleteAction`` component that removes itself if the record is deleted, just be sure to pass true into the constructor when working with a many_many relationship. As well if you define a ``CMSEditLink`` method on your model object when the restore completes you will be redirected to that link.
+Optionally you could remove and replace the delete action with the ``WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedDeleteAction`` component that removes itself if the record is deleted, just be sure to pass true into the constructor when working with a many_many relationship. As well if you define a ``CMSEditLink`` method on your model object when the restore completes you will be redirected to that link. When working with versioned in most cases `SilverStripe\Versioned\GridFieldArchiveAction` so instead you would remove and replace the archive action with the ``WebbuildersGroup\GridFieldDeletedItems\Forms\GridFieldDeletedArchiveAction`` component that removes itself if the record is archived, just be sure to pass true into the constructor when working with a many_many relationship. As well if you define a ``CMSEditLink`` method on your model object when the restore completes you will be redirected to that link.

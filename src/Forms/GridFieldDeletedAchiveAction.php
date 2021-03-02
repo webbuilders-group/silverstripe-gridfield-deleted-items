@@ -1,7 +1,6 @@
 <?php
 namespace WebbuildersGroup\GridFieldDeletedItems\Forms;
 
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\GridFieldArchiveAction;
 use SilverStripe\Versioned\Versioned;
