@@ -168,7 +168,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
         }
 
         $isDeletedFromDraft = (!$record->hasMethod('isOnDraft') ? $record->isOnLiveOnly() : !$record->isOnDraft());
-        if ($gridField->State->ListDisplayMode->ShowDeletedItems != 'Y' && !$isDeletedFromDraft) {
+        if ($gridField->State->ListDisplayMode->ShowDeletedItems != 'Y' || !$isDeletedFromDraft) {
             return;
         }
 

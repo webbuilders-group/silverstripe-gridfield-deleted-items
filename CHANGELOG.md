@@ -1,6 +1,9 @@
 # Change Log
 
-## [2.0.1](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/tree/2.1.0) (2021-03-02)
+## [2.1.1](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/tree/2.1.1) (2021-05-13)
+[Full Changelog](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/compare/2.1.0...2.1.1)
+
+## [2.1.0](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/tree/2.1.0) (2021-03-02)
 [Full Changelog](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/compare/2.0.0...2.1.0)
 
 ## [2.0.0](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/tree/2.0.0) (2018-05-28)
