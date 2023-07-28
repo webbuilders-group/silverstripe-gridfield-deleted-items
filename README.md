@@ -1,6 +1,6 @@
 SilverStripe GridField Deleted Items
 =================
-[![Build Status](https://travis-ci.org/webbuilders-group/silverstripe-gridfield-deleted-items.png?branch=master)](https://travis-ci.org/webbuilders-group/silverstripe-gridfield-deleted-items)
+[![CI](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/actions/workflows/ci.yml/badge.svg)](https://github.com/webbuilders-group/silverstripe-versioned-helpers/actions/workflows/ci.yml)
 
 Provides a series of components that allows you to view versioned objects that have been deleted from the draft site.
 
@@ -9,7 +9,8 @@ Provides a series of components that allows you to view versioned objects that h
 
 
 ## Requirements
-* SilverStripe Framework 4.5+
+* SilverStripe Framework 4.5+ | 5.0+
+* SilverStripe Versioned 1.5+ | 2.0+
 
 
 ## Installation
