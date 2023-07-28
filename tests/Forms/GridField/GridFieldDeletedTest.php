@@ -65,11 +65,11 @@ class GridFieldDeletedTest extends FunctionalTest
         }
 
 
-        //In the default state the list should not contain the deleted items
+        // In the default state the list should not contain the deleted items
         $this->assertEquals(0, $this->gridField->getManipulatedList()->filter('ID', $deletedIDs)->count(), 'Deleted items are visible in the list and they should not be in the default state');
 
 
-        //Toggle the show deleted on
+        // Toggle the show deleted on
         $stateID = 'testGridStateActionField';
         $request = new HTTPRequest('POST', 'url', [], ['action_gridFieldAlterAction?StateID=' . $stateID => true, $this->form->getSecurityToken()->getName() => $this->form->getSecurityToken()->getValue()]);
         $session = Controller::curr()->getRequest()->getSession();
@@ -79,11 +79,11 @@ class GridFieldDeletedTest extends FunctionalTest
         $this->gridField->gridFieldAlterAction(['StateID' => $stateID], $this->form, $request);
 
 
-        //Check to see if the deleted items are now visible
+        // Check to see if the deleted items are now visible
         $this->assertGreaterThan(0, $this->gridField->getManipulatedList()->filter('ID', $deletedIDs)->count(), 'Deleted items are not visible in the list and they should be when the toggle is on');
 
 
-        //Toggle the show deleted back off
+        // Toggle the show deleted back off
         $stateID = 'testGridStateActionField';
         $request = new HTTPRequest('POST', 'url', [], ['action_gridFieldAlterAction?StateID=' . $stateID => true, $this->form->getSecurityToken()->getName() => $this->form->getSecurityToken()->getValue()]);
         $session = Controller::curr()->getRequest()->getSession();
@@ -93,7 +93,7 @@ class GridFieldDeletedTest extends FunctionalTest
         $this->gridField->gridFieldAlterAction(['StateID' => $stateID], $this->form, $request);
 
 
-        //Check to see if the deleted items are now visible
+        // Check to see if the deleted items are now visible
         $this->assertEquals(0, $this->gridField->getManipulatedList()->filter('ID', $deletedIDs)->count(), 'Deleted items are visible in the list and they should be when the toggle is off');
     }
 
@@ -102,17 +102,17 @@ class GridFieldDeletedTest extends FunctionalTest
      */
     public function testRestoreDeleted()
     {
-        //Load the item to delete and capture it's id then delete it
+        // Load the item to delete and capture it's id then delete it
         $deletedItem = $this->objFromFixture(GridFieldDeletedTest\TestObject::class, 'testobj2');
         $deletedItemID = $deletedItem->ID;
         $deletedItem->delete();
 
 
-        //Make sure the item was deleted
+        // Make sure the item was deleted
         $this->assertNull(Versioned::get_one_by_stage(GridFieldDeletedTest\TestObject::class, 'Stage', '"ID"=' . $deletedItemID), 'Item was not deleted prior to restoring');
 
 
-        //Attempt to restore the item
+        // Attempt to restore the item
         $stateID = 'testGridStateActionField';
         $request = new HTTPRequest('POST', 'url', [], ['action_gridFieldAlterAction?StateID=' . $stateID => true, $this->form->getSecurityToken()->getName() => $this->form->getSecurityToken()->getValue()]);
         $session = Controller::curr()->getRequest()->getSession();
@@ -122,7 +122,7 @@ class GridFieldDeletedTest extends FunctionalTest
         $this->gridField->gridFieldAlterAction(['StateID' => $stateID], $this->form, $request);
 
 
-        //Check to see if the item exists again
+        // Check to see if the item exists again
         $item = Versioned::get_one_by_stage(GridFieldDeletedTest\TestObject::class, 'Stage', '"Title"=\'Test Object 2\'');
         $this->assertInstanceOf(GridFieldDeletedTest\TestObject::class, $item, 'Could not find the item after restoring');
         $this->assertTrue($item->exists(), 'Could not find the item after restoring');
@@ -133,39 +133,39 @@ class GridFieldDeletedTest extends FunctionalTest
      */
     public function testDeletedNoEdit()
     {
-        //Load the item to delete and capture it's id then delete it
+        // Load the item to delete and capture it's id then delete it
         $deletedItem = $this->objFromFixture(GridFieldDeletedTest\TestObject::class, 'testobj2');
         $deletedItem->delete();
 
 
-        //Enable the deleted items
+        // Enable the deleted items
         $this->gridField->getState()->ListDisplayMode->ShowDeletedItems = 'Y';
 
 
-        //Get the attributes for the deleted item's title column
+        // Get the attributes for the deleted item's title column
         $attributes = $this->gridField->getConfig()->getComponentByType(GridFieldDeletedColumns::class)->getColumnAttributes($this->gridField, $deletedItem, 'Title');
 
 
-        //Verify we have an array and the class attribute exists
+        // Verify we have an array and the class attribute exists
         $this->assertInternalType('array', $attributes);
         $this->assertArrayHasKey('class', $attributes);
 
 
-        //Verify that the deleted-record class is applied
+        // Verify that the deleted-record class is applied
         $classes = explode(' ', $attributes['class']);
         $this->assertContains('deleted-record', $classes, 'Item was deleted but could not find the deleted-record class');
 
 
-        //Get the attributes for a non-deleted item
+        // Get the attributes for a non-deleted item
         $attributes = $this->gridField->getConfig()->getComponentByType(GridFieldDeletedColumns::class)->getColumnAttributes($this->gridField, $this->objFromFixture(GridFieldDeletedTest\TestObject::class, 'testobj1'), 'Title');
 
 
-        //Verify we have an array and the class attribute exists
+        // Verify we have an array and the class attribute exists
         $this->assertInternalType('array', $attributes);
         $this->assertArrayHasKey('class', $attributes);
 
 
-        //Verify that the deleted-record class is not applied
+        // Verify that the deleted-record class is not applied
         $classes = explode(' ', $attributes['class']);
         $this->assertNotContains('deleted-record', $classes, 'Item was not deleted but the deleted-record class was found');
     }

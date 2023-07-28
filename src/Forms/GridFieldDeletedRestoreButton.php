@@ -68,24 +68,24 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
 
                 $record = Versioned::get_latest_version($gridField->getModelClass(), intval($arguments['RecordID']));
 
-                //If the record does not exist on either draft or live write to the draft
+                // If the record does not exist on either draft or live write to the draft
                 $isDeletedFromDraft = (!$record->hasMethod('isOnDraft') ? $record->isOnLiveOnly() : !$record->isOnDraft());
                 if ($isDeletedFromDraft) {
                     $record->writeToStage('Stage');
 
                     if ($record->hasMethod('CMSEditLink')) {
-                        //Redirect to the edit screen
+                        // Redirect to the edit screen
                         return $controller->redirect($record->CMSEditLink());
                     } else {
                         return;
                     }
                 }
 
-                //Resource already exists so this shouldn't have been called
+                // Resource already exists so this shouldn't have been called
                 return $controller->httpError(400, _t(GridFieldDeletedRestoreButton::class . '.ITEM_ALREADY_EXISTS', 'Item already exists on the draft site'));
             }
 
-            //Record ID is missing or not a number
+            // Record ID is missing or not a number
             return $controller->httpError(400, _t(GridFieldDeletedRestoreButton::class . '.INVALID_ID', 'Invalid Record ID'));
         }
     }
