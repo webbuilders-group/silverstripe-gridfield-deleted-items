@@ -1,6 +1,6 @@
 SilverStripe GridField Deleted Items
 =================
-[![CI](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/actions/workflows/ci.yml/badge.svg)](https://github.com/webbuilders-group/silverstripe-versioned-helpers/actions/workflows/ci.yml)
+[![CI](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/actions/workflows/ci.yml/badge.svg)](https://github.com/webbuilders-group/silverstripe-gridfield-deleted-items/actions/workflows/ci.yml)
 
 Provides a series of components that allows you to view versioned objects that have been deleted from the draft site.
 
