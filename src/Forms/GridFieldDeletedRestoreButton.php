@@ -42,7 +42,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
      */
     public function getActions($gridField)
     {
-        return ['restore-draft-item'];
+        return ['restoredraftitem'];
     }
 
     /**
@@ -54,7 +54,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'restore-draft-item') {
+        if ($actionName == 'restoredraftitem') {
             if (!DataObject::has_extension($gridField->getModelClass(), Versioned::class)) {
                 user_error($gridField->getModelClass() . ' does not have the Versioned extension', E_USER_ERROR);
 
@@ -128,10 +128,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
         if ($gridField->State->ListDisplayMode->ShowDeletedItems == 'Y' && $isDeletedFromDraft) {
             Requirements::css('webbuilders-group/silverstripe-gridfield-deleted-items: css/GridFieldDeletedRestoreButton.css');
 
-            return GridField_FormAction::create($gridField, 'restore-draft-item', false, 'restore-draft-item', ['RecordID' => $record->ID])
-                ->addExtraClass('btn--icon-md btn--no-text grid-field__icon-action font-icon-back-in-time action-menu--handled restore-draft-item')
-                ->setAttribute('title', _t(GridFieldDeletedRestoreButton::class . '.RESTORE_DRAFT', 'Restore Draft'))
-                ->forTemplate();
+            return $this->getButton($gridField, $record)->Field();
         }
     }
 
@@ -152,9 +149,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
      */
     public function getExtraData($gridField, $record, $columnName)
     {
-        return [
-            'classNames' => 'font-icon-back-in-time action-detail restore-draft-item',
-        ];
+        return $this->getButton($gridField, $record)->getAttributes();
     }
 
     /**
@@ -173,5 +168,18 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
         }
 
         return GridField_ActionMenuItem::DEFAULT_GROUP;
+    }
+
+    /**
+     * Gets the button used for restoring an item from draft
+     * @return {GridField_FormAction}
+     */
+    protected function getButton($gridField, $record)
+    {
+        return GridField_FormAction::create($gridField, 'restoredraftitem' . $record->ID, false, 'restoredraftitem', ['RecordID' => $record->ID])
+            ->addExtraClass('btn--icon-md btn--no-text grid-field__icon-action font-icon-back-in-time action-menu--handled restore-draft-item')
+            ->setAttribute('classNames', 'font-icon-back-in-time action-detail restore-draft-item')
+            ->setDescription(_t(GridFieldDeletedRestoreButton::class . '.RESTORE_DRAFT', 'Restore Draft'))
+            ->setAttribute('aria-label', _t(GridFieldDeletedRestoreButton::class . '.RESTORE_DRAFT', 'Restore Draft'));
     }
 }
