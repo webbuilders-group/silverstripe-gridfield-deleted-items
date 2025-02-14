@@ -42,7 +42,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
      */
     public function getActions($gridField)
     {
-        return ['restoredraftitem'];
+        return ['restore-draft-item'];
     }
 
     /**
@@ -54,7 +54,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'restoredraftitem') {
+        if ($actionName == 'restore-draft-item') {
             if (!DataObject::has_extension($gridField->getModelClass(), Versioned::class)) {
                 user_error($gridField->getModelClass() . ' does not have the Versioned extension', E_USER_ERROR);
 
@@ -176,7 +176,7 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
      */
     protected function getButton($gridField, $record)
     {
-        return GridField_FormAction::create($gridField, 'restoredraftitem' . $record->ID, false, 'restoredraftitem', ['RecordID' => $record->ID])
+        return GridField_FormAction::create($gridField, 'restore-draft-item' . $record->ID, false, 'restore-draft-item', ['RecordID' => $record->ID])
             ->addExtraClass('btn--icon-md btn--no-text grid-field__icon-action font-icon-back-in-time action-menu--handled restore-draft-item')
             ->setAttribute('classNames', 'font-icon-back-in-time action-detail restore-draft-item')
             ->setDescription(_t(GridFieldDeletedRestoreButton::class . '.RESTORE_DRAFT', 'Restore Draft'))
