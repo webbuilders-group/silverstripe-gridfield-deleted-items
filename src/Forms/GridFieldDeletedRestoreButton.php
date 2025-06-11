@@ -73,9 +73,11 @@ class GridFieldDeletedRestoreButton implements GridField_ActionMenuItem, GridFie
                 if ($isDeletedFromDraft) {
                     $record->writeToStage('Stage');
 
-                    if ($record->hasMethod('CMSEditLink')) {
+                    ;
+
+                    if ($record->hasMethod('getCMSEditLink') && $editLink = $record->getCMSEditLink()) {
                         // Redirect to the edit screen
-                        return $controller->redirect($record->CMSEditLink());
+                        return $controller->redirect($editLink);
                     } else {
                         return;
                     }
